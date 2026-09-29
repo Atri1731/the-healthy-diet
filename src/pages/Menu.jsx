@@ -2,8 +2,7 @@ import {useEffect, useMemo, useState} from "react";
 import {Search, SlidersHorizontal, X} from "lucide-react";
 import FoodCard from "../components/FoodCard";
 import api from "../services/api";
-import { useSearchParams } from "react-router-dom";
-
+import {useSearchParams} from "react-router-dom";
 
 const categories = [
   "All",
@@ -21,12 +20,11 @@ function Menu() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-const [activeCategory, setActiveCategory] = useState(
-  () => searchParams.get("category") || "All"
-);
-
+  const [activeCategory, setActiveCategory] = useState(
+    () => searchParams.get("category") || "All",
+  );
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -198,7 +196,6 @@ const [activeCategory, setActiveCategory] = useState(
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-
                 className={`
                   shrink-0
                   rounded-full
