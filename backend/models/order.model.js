@@ -84,13 +84,25 @@ const orderSchema = new mongoose.Schema(
 status: {
   type: String,
   enum: [
+    "Pending",
     "Confirmed",
+    "Rejected",
     "Preparing",
     "Out for Delivery",
     "Delivered",
     "Cancelled",
   ],
-  default: "Confirmed",
+  default: "Pending",
+},
+
+statusMessage: {
+  type: String,
+  default: "Your order is waiting for confirmation.",
+},
+
+rejectionReason: {
+  type: String,
+  default: "",
 },
 
   },

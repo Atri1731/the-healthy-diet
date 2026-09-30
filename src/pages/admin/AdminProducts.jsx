@@ -426,6 +426,49 @@ const payload = {
                     className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-green-600"
                   />
                 </div>
+
+                
+<div className="sm:col-span-2">
+  <label
+    htmlFor="product-image"
+    className="mb-2 block text-sm font-semibold text-gray-700"
+  >
+    Product Image URL
+  </label>
+
+  <input
+    id="product-image"
+    type="url"
+    name="image"
+    value={form.image}
+    onChange={handleChange}
+    placeholder="https://example.com/healthy-meal.jpg"
+    className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-green-600"
+  />
+
+  <p className="mt-2 text-xs text-gray-500">
+    Paste a publicly accessible image URL for your food product.
+  </p>
+
+  {form.image.trim() && (
+    <div className="mt-4">
+      <p className="mb-2 text-sm font-medium text-gray-700">
+        Image preview
+      </p>
+      <img
+        src={form.image}
+        alt="Product preview"
+        className="h-32 w-32 rounded-xl border border-gray-200 object-cover"
+        onError={(e) => {
+          e.currentTarget.style.display = "none";
+        }}
+        onLoad={(e) => {
+          e.currentTarget.style.display = "block";
+        }}
+      />
+    </div>
+  )}
+</div>
               </div>
 
               {/* Ingredients */}

@@ -1,7 +1,7 @@
 import {ArrowLeft, Check, CreditCard, MapPin, Phone, User} from "lucide-react";
 import {Link, useNavigate} from "react-router-dom";
-import {useState} from "react";
-import Navbar from "../components/Navbar";
+import {useEffect, useState} from "react";
+// import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import {useCart} from "../context/CartContext";
 import api from "../services/api";
@@ -27,7 +27,55 @@ function Checkout() {
 
   const deliveryFee = cartTotal >= 499 ? 0 : 40;
   const finalTotal = cartTotal + deliveryFee;
-  const {token, isAuthenticated} = useAuth();
+ 
+const { token, isAuthenticated, user } = useAuth();
+
+useEffect(() => {
+  if (!isAuthenticated || !token) return;
+
+  let cancelled = false;
+
+  const loadCustomerDetails = async () => {
+    // Use login details immediately if they are available.
+    if (user) {
+      setFormData((previous) => ({
+        ...previous,
+        name: user.name || previous.name,
+        email: user.email || previous.email,
+      }));
+    }
+
+    try {
+      // Fetch the latest saved details from your database.
+      const response = await api.get("/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (cancelled) return;
+
+      const profile = response.data.user;
+
+      setFormData((previous) => ({
+        ...previous,
+        name: profile.name || previous.name,
+        email: profile.email || previous.email,
+      }));
+    } catch (error) {
+      console.error(
+        "Unable to load customer details:",
+        error.response?.data?.message || error.message
+      );
+    }
+  };
+
+  loadCustomerDetails();
+
+  return () => {
+    cancelled = true;
+  };
+}, [isAuthenticated, token, user]);;
 
   const [placingOrder, setPlacingOrder] = useState(false);
   const [orderError, setOrderError] = useState("");
@@ -193,7 +241,7 @@ function Checkout() {
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-[#FCFAF4]">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <main className="flex min-h-[60vh] items-center justify-center px-5 py-16">
           <div className="text-center">
@@ -225,7 +273,7 @@ function Checkout() {
 
   return (
     <div className="min-h-screen bg-[#FCFAF4]">
-      <Navbar />
+      {/* <Navbar /> */}
 
       <main className="w-full px-5 py-10 sm:px-8 sm:py-12 lg:px-12 xl:px-16 2xl:px-20">
         {/* Header */}
