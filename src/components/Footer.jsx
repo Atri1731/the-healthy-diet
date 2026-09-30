@@ -4,6 +4,7 @@ import {
   MapPin,
   ArrowUp,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 function Footer() {
   const scrollToTop = () => {
     window.scrollTo({
@@ -125,76 +126,53 @@ function Footer() {
 </div>
           </div>
 
-          {/* QUICK LINKS */}
-          <div>
-            <h3 className="text-sm font-bold">Quick Links</h3>
+         
+{/* QUICK LINKS */}
+<div>
+  <h3 className="text-sm font-bold">Quick Links</h3>
 
-            <div className="mt-5 flex flex-col gap-3">
-              <a
-                href="/"
-                className="text-sm text-white/60 transition hover:text-white"
-              >
-                Home
-              </a>
+  <div className="mt-5 flex flex-col gap-3">
+    <Link to="/" className="text-sm text-white/60 transition hover:text-white">
+      Home
+    </Link>
 
-              <a
-                href="/menu"
-                className="text-sm text-white/60 transition hover:text-white"
-              >
-                Menu
-              </a>
+    <Link to="/menu" className="text-sm text-white/60 transition hover:text-white">
+      Menu
+    </Link>
 
-              <a
-                href="/about"
-                className="text-sm text-white/60 transition hover:text-white"
-              >
-                About Us
-              </a>
+    <Link to="/about" className="text-sm text-white/60 transition hover:text-white">
+      About Us
+    </Link>
 
-              <a
-                href="/contact"
-                className="text-sm text-white/60 transition hover:text-white"
-              >
-                Contact
-              </a>
-            </div>
-          </div>
+    <Link to="/contact" className="text-sm text-white/60 transition hover:text-white">
+      Contact
+    </Link>
+  </div>
+</div>
 
-          {/* CUSTOMER */}
-          <div>
-            <h3 className="text-sm font-bold">Customer</h3>
+          
+{/* CUSTOMER */}
+<div>
+  <h3 className="text-sm font-bold">Customer</h3>
 
-            <div className="mt-5 flex flex-col gap-3">
-              <a
-                href="/login"
-                className="text-sm text-white/60 transition hover:text-white"
-              >
-                Login
-              </a>
+  <div className="mt-5 flex flex-col gap-3">
+    <Link to="/login" className="text-sm text-white/60 transition hover:text-white">
+      Login
+    </Link>
 
-              <a
-                href="/register"
-                className="text-sm text-white/60 transition hover:text-white"
-              >
-                Create Account
-              </a>
+    <Link to="/register" className="text-sm text-white/60 transition hover:text-white">
+      Create Account
+    </Link>
 
-              <a
-                href="/orders"
-                className="text-sm text-white/60 transition hover:text-white"
-              >
-                My Orders
-              </a>
+    <Link to="/orders" className="text-sm text-white/60 transition hover:text-white">
+      My Orders
+    </Link>
 
-              <a
-                href="/cart"
-                className="text-sm text-white/60 transition hover:text-white"
-              >
-                Shopping Cart
-              </a>
-            </div>
-          </div>
-
+    <Link to="/cart" className="text-sm text-white/60 transition hover:text-white">
+      Shopping Cart
+    </Link>
+  </div>
+</div>
           {/* CONTACT */}
           <div>
             <h3 className="text-sm font-bold">Contact Us</h3>
