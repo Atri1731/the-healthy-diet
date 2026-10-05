@@ -312,7 +312,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
@@ -389,7 +389,7 @@ function OrderSuccess() {
   if (!order) {
     return (
       <div className="min-h-screen bg-[#FCFAF4]">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <main className="flex min-h-[70vh] items-center justify-center px-5 py-12">
           <div className="w-full max-w-lg rounded-[28px] border border-[#E5E1D5] bg-white p-8 text-center shadow-sm sm:p-10">
