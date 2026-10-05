@@ -1,8 +1,12 @@
 import {ArrowRight, Eye, EyeOff, Leaf, Lock, Mail, User} from "lucide-react";
+
+import {GoogleLogin} from "@react-oauth/google";
 import {Link, useNavigate} from "react-router-dom";
 import {useState} from "react";
+
 import api from "../services/api";
 import Footer from "../components/Footer";
+import {useAuth} from "../context/AuthContext";
 
 function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,6 +14,7 @@ function Register() {
   const [selectedRole, setSelectedRole] = useState("user");
 
   const navigate = useNavigate();
+  const {login} = useAuth();
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -35,11 +40,11 @@ function Register() {
     e.preventDefault();
 
     if (selectedRole === "admin") {
-  setError(
-    "Admin accounts must be created by the website owner. Please register as a customer or contact the owner."
-  );
-  return;
-}
+      setError(
+        "Admin accounts must be created by the website owner. Please register as a customer or contact the owner.",
+      );
+      return;
+    }
 
     setError("");
     setSuccess("");
@@ -86,10 +91,54 @@ function Register() {
       setLoading(false);
     }
   };
+
+const handleGoogleSignup = async (credentialResponse) => {
+  try {
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    const response = await api.post("/auth/google/register", {
+      credential: credentialResponse.credential,
+    });
+
+    if (!response.data?.success) {
+      setError(
+        response.data?.message ||
+          "Unable to create your account with Google."
+      );
+      return;
+    }
+
+    const { token, user } = response.data;
+
+    if (!token || !user) {
+      setError("Invalid Google signup response.");
+      return;
+    }
+
+    // Log the new customer in using the same AuthContext
+    login(user, token);
+
+    setSuccess("Account created successfully! Redirecting...");
+
+    setTimeout(() => {
+      navigate("/", { replace: true });
+    }, 800);
+  } catch (error) {
+    console.error("Google signup error:", error);
+
+    setError(
+      error.response?.data?.message ||
+        "Unable to create your account with Google."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
   return (
     <div className="min-h-screen bg-[#FCFAF4]">
-      
-
       <main className="flex w-full items-center justify-center px-5 py-10 sm:px-8 sm:py-14 lg:px-12 lg:py-16">
         <div className="grid w-full max-w-5xl overflow-hidden rounded-[30px] border border-[#E5E1D5] bg-white shadow-[0_20px_60px_rgba(24,49,38,0.08)] lg:grid-cols-2">
           {/* ================= LEFT SIDE ================= */}
@@ -147,6 +196,8 @@ function Register() {
                 Create Account
               </p>
 
+              
+
               <h2 className="mt-2 text-3xl font-bold text-[#183126]">
                 Join The Healthy Diet
               </h2>
@@ -156,51 +207,54 @@ function Register() {
               </p>
             </div>
 
-            
-{/* Select Account Role */}
-<div className="mt-6">
-  <label className="mb-3 block text-sm font-semibold text-[#183126]">
-    Create Account As
-  </label>
+            {/* Select Account Role */}
+            <div className="mt-6">
+              <label className="mb-3 block text-sm font-semibold text-[#183126]">
+                Create Account As
+              </label>
 
-  <div className="grid grid-cols-2 gap-3">
-    <button
-      type="button"
-      onClick={() => {
-        setSelectedRole("user");
-        setError("");
-      }}
-      className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
-        selectedRole === "user"
-          ? "border-[#174D32] bg-[#E7EFDC] text-[#174D32]"
-          : "border-[#E5E1D5] bg-white text-[#66736B]"
-      }`}
-    >
-      Customer
-    </button>
 
-    <button
-      type="button"
-      onClick={() => {
-        setSelectedRole("admin");
-        setError("");
-      }}
-      className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
-        selectedRole === "admin"
-          ? "border-[#174D32] bg-[#E7EFDC] text-[#174D32]"
-          : "border-[#E5E1D5] bg-white text-[#66736B]"
-      }`}
-    >
-      Admin
-    </button>
-  </div>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedRole("user");
+                    setError("");
+                  }}
+                  className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
+                    selectedRole === "user"
+                      ? "border-[#174D32] bg-[#E7EFDC] text-[#174D32]"
+                      : "border-[#E5E1D5] bg-white text-[#66736B]"
+                  }`}
+                >
+                  Customer
+                </button>
 
-  {selectedRole === "admin" && (
-    <p className="mt-2 text-xs leading-5 text-[#66736B]">
-      Administrator accounts must be created or authorized by the website owner.
-    </p>
-  )}
-</div>
+                
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedRole("admin");
+                    setError("");
+                  }}
+                  className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
+                    selectedRole === "admin"
+                      ? "border-[#174D32] bg-[#E7EFDC] text-[#174D32]"
+                      : "border-[#E5E1D5] bg-white text-[#66736B]"
+                  }`}
+                >
+                  Admin
+                </button>
+              </div>
+
+              {selectedRole === "admin" && (
+                <p className="mt-2 text-xs leading-5 text-[#66736B]">
+                  Administrator accounts must be created or authorized by the
+                  website owner.
+                </p>
+              )}
+            </div>
 
             {error && (
               <div
@@ -220,38 +274,38 @@ function Register() {
               </div>
             )}
 
+
+
             {/* Form */}
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+              {/* Name */}
+              <div>
+                <label
+                  htmlFor="name"
+                  className="mb-2 block text-sm font-semibold text-[#183126]"
+                >
+                  Full Name
+                </label>
 
-{/* Name */}
-<div>
-  <label
-    htmlFor="name"
-    className="mb-2 block text-sm font-semibold text-[#183126]"
-  >
-    Full Name
-  </label>
+                <div className="relative">
+                  <User
+                    size={18}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#66736B]"
+                  />
 
-  <div className="relative">
-    <User
-      size={18}
-      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#66736B]"
-    />
-
-    <input
-      id="name"
-      name="name"
-      type="text"
-      value={formData.name}
-      onChange={handleChange}
-      placeholder="Enter your full name"
-      minLength={2}
-      required
-      className="w-full rounded-xl border border-[#E5E1D5] bg-[#FCFAF4] py-3.5 pl-11 pr-4 text-sm text-[#183126] outline-none transition placeholder:text-[#9AA49E] focus:border-[#6B9F45] focus:ring-2 focus:ring-[#6B9F45]/10"
-    />
-  </div>
-</div>
-
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Enter your full name"
+                    minLength={2}
+                    required
+                    className="w-full rounded-xl border border-[#E5E1D5] bg-[#FCFAF4] py-3.5 pl-11 pr-4 text-sm text-[#183126] outline-none transition placeholder:text-[#9AA49E] focus:border-[#6B9F45] focus:ring-2 focus:ring-[#6B9F45]/10"
+                  />
+                </div>
+              </div>
 
               {/* Email */}
               <div>
@@ -436,6 +490,37 @@ function Register() {
 
                 {!loading && <ArrowRight size={17} />}
               </button>
+              {selectedRole === "user" && (
+  <>
+    <div className="relative my-6">
+      <div className="absolute inset-0 flex items-center">
+        <div className="w-full border-t border-[#E5E1D5]" />
+      </div>
+
+      <div className="relative flex justify-center">
+        <span className="bg-white px-4 text-xs font-medium text-[#66736B]">
+          OR
+        </span>
+      </div>
+    </div>
+
+    <div className="flex justify-center">
+      <GoogleLogin
+        onSuccess={handleGoogleSignup}
+        onError={() => {
+          setError(
+            "Google signup failed. Please try again."
+          );
+        }}
+        useOneTap={false}
+        theme="outline"
+        size="large"
+        text="signup_with"
+        shape="rectangular"
+      />
+    </div>
+  </>
+)}
             </form>
 
             {/* Login */}

@@ -7,6 +7,7 @@ import {
   Lock,
   Mail,
 } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -372,6 +373,82 @@ const handleSubmit = async (e) => {
 
   {!loading && <ArrowRight size={17} />}
 </button>
+
+<div className="relative my-6">
+  <div className="absolute inset-0 flex items-center">
+    <div className="w-full border-t border-[#E5E1D5]" />
+  </div>
+
+  <div className="relative flex justify-center">
+    <span className="bg-white px-4 text-xs font-medium text-[#66736B]">
+      OR
+    </span>
+  </div>
+</div>
+
+{selectedRole === "user" && (
+  <div className="flex justify-center">
+    <GoogleLogin
+      onSuccess={async (credentialResponse) => {
+        try {
+          setLoading(true);
+          setError("");
+
+          const response = await api.post("/auth/google", {
+            credential: credentialResponse.credential,
+          });
+
+          if (!response.data?.success) {
+            setError(
+              response.data?.message ||
+                "Unable to login with Google."
+            );
+            return;
+          }
+
+          const { token, user } = response.data;
+
+          if (!token || !user) {
+            setError(
+              "Invalid Google login response."
+            );
+            return;
+          }
+
+          login(user, token);
+
+          if (user.role === "admin") {
+            navigate("/admin", { replace: true });
+          } else {
+            navigate("/", { replace: true });
+          }
+        } catch (error) {
+          console.error(
+            "Google login error:",
+            error
+          );
+
+          setError(
+            error.response?.data?.message ||
+              "Unable to login with Google."
+          );
+        } finally {
+          setLoading(false);
+        }
+      }}
+      onError={() => {
+        setError("Google login failed. Please try again.");
+      }}
+      useOneTap={false}
+      theme="outline"
+      size="large"
+      text="continue_with"
+      shape="rectangular"
+      
+    />
+  </div>
+)}
+
             </form>
 
             {/* Register */}

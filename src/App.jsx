@@ -25,8 +25,11 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminProducts from "./pages/admin/AdminProducts";
 
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
 function App() {
   return (
+     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
     <BrowserRouter>
       <Routes>
         {/* Customer website: shared navbar */}
@@ -70,6 +73,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }
 
