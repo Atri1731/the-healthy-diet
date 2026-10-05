@@ -9,6 +9,7 @@ const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/auth.routes");
 const orderRoutes = require("./routes/order.routes");
+const notificationRoutes = require("./routes/notification.routes");
 const adminRoutes = require("./routes/admin.routes");
 const productRoutes = require("./routes/product.routes");
 const userDataRoutes = require("./routes/userData.routes");
@@ -21,6 +22,8 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
+
+app.use("/api/notifications", notificationRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/user-data", userDataRoutes);

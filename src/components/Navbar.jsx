@@ -13,6 +13,7 @@ import {
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useFavorites } from "../context/FavoriteContext";
+import NotificationBell from "./NotificationBell";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -186,12 +187,16 @@ function Navbar() {
                   </Link>
                 )}
 
+
+                <NotificationBell />
+
                 <Link
                   to="/orders"
                   className="text-sm font-medium text-[#46564D] transition hover:text-[#174D32]"
                 >
                   Orders
                 </Link>
+
 
                 <Link
                   to="/profile"
@@ -234,16 +239,22 @@ function Navbar() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            type="button"
-            onClick={() => setOpen((previous) => !previous)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            className="flex h-10 w-10 items-center justify-center rounded-full text-[#174D32] transition hover:bg-[#E7EFDC] md:hidden"
-          >
-            {open ? <X size={25} /> : <Menu size={25} />}
-          </button>
+    {/* Mobile Actions */}
+<div className="flex items-center gap-2 md:hidden">
+  {/* Notification Bell */}
+  {isAuthenticated && <NotificationBell />}
+
+  {/* Mobile Menu Button */}
+  <button
+    type="button"
+    onClick={() => setOpen((previous) => !previous)}
+    aria-label={open ? "Close menu" : "Open menu"}
+    aria-expanded={open}
+    className="flex h-10 w-10 items-center justify-center rounded-full text-[#174D32] transition hover:bg-[#E7EFDC]"
+  >
+    {open ? <X size={25} /> : <Menu size={25} />}
+  </button>
+</div>
         </div>
 
         {/* Mobile Menu */}
