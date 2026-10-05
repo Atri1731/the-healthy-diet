@@ -1,4 +1,5 @@
 import { ArrowRight, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function HealthyCTA() {
   return (
@@ -68,30 +69,31 @@ function HealthyCTA() {
           {/* Button */}
           <div>
 
-            <button
-              className="
-                group
-                inline-flex
-                items-center
-                gap-2
-                rounded-full
-                bg-white
-                px-6
-                py-3.5
-                text-sm
-                font-bold
-                text-[#174D32]
-                transition
-                hover:bg-[#E7EFDC]
-              "
-            >
-              Explore Menu
+<Link
+  to="/menu"
+  className="
+    group
+    inline-flex
+    items-center
+    gap-2
+    rounded-full
+    bg-white
+    px-6
+    py-3.5
+    text-sm
+    font-bold
+    text-[#174D32]
+    transition
+    hover:bg-[#E7EFDC]
+  "
+>
+  Explore Menu
 
-              <ArrowRight
-                size={17}
-                className="transition-transform group-hover:translate-x-1"
-              />
-            </button>
+  <ArrowRight
+    size={17}
+    className="transition-transform group-hover:translate-x-1"
+  />
+</Link>
 
           </div>
 
