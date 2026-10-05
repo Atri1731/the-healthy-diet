@@ -9,8 +9,6 @@ function Home() {
   return (
     <div className="min-h-screen bg-[#FCFAF4]">
 
-    
-
       <main>
         <Hero />
 
