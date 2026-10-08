@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   Heart,
@@ -13,11 +13,16 @@ import {
 import api from "../services/api";
 import { useCart } from "../context/CartContext";
 import { useFavorites } from "../context/FavoriteContext";
+import FloatingCartBar from "../components/FloatingCartBar";
+import { useAuth } from "../context/AuthContext";
 
 function MealDetails() {
+    
   const { id } = useParams();
   const { addToCart } = useCart();
   const { favorites, toggleFavorite } = useFavorites();
+const { isAuthenticated } = useAuth();
+const navigate = useNavigate();
 
   const [meal, setMeal] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -75,7 +80,9 @@ function MealDetails() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#F8FAF5] px-4 py-16">
+    //   <main className="min-h-screen bg-[#F8FAF5] px-4 py-16">
+
+    <main className="min-h-screen bg-[#F8FAF5] px-4 py-10 pb-28 sm:px-6 lg:px-10 lg:pb-32">
         <p className="text-center text-[#174D32]">
           Loading meal details...
         </p>
@@ -191,7 +198,19 @@ function MealDetails() {
 
               <button
                 type="button"
-                onClick={() => addToCart(meal)}
+  onClick={() => {
+  if (!isAuthenticated) {
+    navigate("/login", {
+      state: {
+        redirectTo: `/menu/${meal.id}`,
+        addToCart: meal,
+      },
+    });
+    return;
+  }
+
+  addToCart(meal);
+}}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#174D32] px-7 py-3.5 font-semibold text-white transition hover:bg-[#103B25]"
               >
                 <ShoppingCart size={19} />
@@ -284,6 +303,7 @@ function MealDetails() {
           </div>
         </section>
       </div>
+      <FloatingCartBar />
     </main>
   );
 }

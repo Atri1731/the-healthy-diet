@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Heart, ShoppingBag, Trash2 } from "lucide-react";
 import { useFavorites } from "../context/FavoriteContext";
 import { useCart } from "../context/CartContext";
+import FloatingCartBar from "../components/FloatingCartBar";
 
 function Favorites() {
   const { favorites, toggleFavorite } = useFavorites();
@@ -133,6 +134,7 @@ function Favorites() {
           </div>
         )}
       </div>
+      <FloatingCartBar />
     </main>
   );
 }

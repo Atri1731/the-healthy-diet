@@ -13,6 +13,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
+import { useLocation } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +23,11 @@ function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+const location = useLocation();
+const { addToCart } = useCart();
+
+const redirectTo = location.state?.redirectTo || "/";
+const pendingCartItem = location.state?.addToCart;
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -80,14 +88,17 @@ const handleSubmit = async (e) => {
     }
 
     // Save the authenticated user and token.
-    login(user, token);
+   login(user, token);
 
-    // Redirect based on account role.
-    if (user.role === "admin") {
-      navigate("/admin", { replace: true });
-    } else {
-      navigate("/", { replace: true });
-    }
+if (user.role === "admin") {
+  navigate("/admin", { replace: true });
+} else {
+  if (pendingCartItem) {
+    addToCart(pendingCartItem);
+  }
+
+  navigate(redirectTo, { replace: true });
+}
   } catch (error) {
     console.error("Login error:", error);
 
