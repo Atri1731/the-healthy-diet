@@ -3,6 +3,7 @@ import {Search, SlidersHorizontal, X} from "lucide-react";
 import FoodCard from "../components/FoodCard";
 import api from "../services/api";
 import {useSearchParams} from "react-router-dom";
+import FloatingCartBar from "../components/FloatingCartBar";
 
 const categories = [
   "All",
@@ -282,9 +283,12 @@ function Menu() {
             >
               Clear Filters
             </button>
+
           </div>
         )}
       </section>
+            <FloatingCartBar />
+
     </main>
   );
 }

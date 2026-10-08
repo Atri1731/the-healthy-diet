@@ -4,6 +4,7 @@ import PopularFoods from "../components/PopularFoods";
 import HealthyLifestyle from "../components/HealthyLifestyle";
 import Footer from "../components/Footer";
 import HealthyCTA from "../components/HealthyCTA";
+import FloatingCartBar from "../components/FloatingCartBar";
 
 function Home() {
   return (
@@ -19,6 +20,7 @@ function Home() {
         <HealthyLifestyle />
 
         <HealthyCTA />
+          <FloatingCartBar />
       </main>
 
       <Footer />
