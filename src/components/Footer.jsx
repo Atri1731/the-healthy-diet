@@ -248,23 +248,23 @@ function Footer() {
           <button
             onClick={scrollToTop}
             aria-label="Back to top"
-            className="
-              fixed
-              bottom-5
-              right-5
-              z-40
-              flex
-              h-10
-              w-10
-              items-center
-              justify-center
-              rounded-full
-              bg-[#174D32]
-              text-white
-              shadow-lg
-              transition
-              hover:bg-[#6B9F45]
-            "
+         className="
+  fixed
+  bottom-24
+  right-5
+  z-40
+  flex
+  h-10
+  w-10
+  items-center
+  justify-center
+  rounded-full
+  bg-[#174D32]
+  text-white
+  shadow-lg
+  transition
+  hover:bg-[#6B9F45]
+"
           >
             <ArrowUp size={17} />
           </button>
