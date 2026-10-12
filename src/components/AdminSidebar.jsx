@@ -6,6 +6,7 @@ import {
   ShoppingBag,
   Users,
   Package,
+  MessageSquare,
   Leaf,
   ArrowLeft,
   Menu,
@@ -32,6 +33,11 @@ const links = [
     name: "Customers",
     path: "/admin/users",
     icon: Users,
+  },
+  {
+    name: "Contact Messages",
+    path: "/admin/contact-messages",
+    icon: MessageSquare,
   },
 ];
 

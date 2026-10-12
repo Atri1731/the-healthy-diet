@@ -7,6 +7,7 @@ Clock,
 Send,
 MessageCircle,
 } from "lucide-react";
+import api from "../services/api";
 
 const initialForm = {
 name: "",
@@ -24,38 +25,78 @@ setForm({ ...form, [event.target.name]: event.target.value });
 setSuccess(false);
 }
 
-function handleSubmit(event) {
+async function handleSubmit(event) {
   event.preventDefault();
 
-  setSuccess(true);
-  setForm(initialForm);
+  try {
+    setSuccess(false);
+
+    await api.post("/contact", form);
+
+    setSuccess(true);
+    setForm(initialForm);
+  } catch (error) {
+    console.error("Contact form error:", error);
+
+    alert(
+      error.response?.data?.message ||
+        "Unable to send your message. Please try again."
+    );
+  }
 }
 
+// const contactDetails = [
+// {
+// icon: Phone,
+// title: "Call Us",
+// value: "Add your business phone number",
+// href: null,
+// },
+// {
+// icon: Mail,
+// title: "Email Us",
+// value: "Add your business email address",
+// href: null,
+// },
+// {
+// icon: MapPin,
+// title: "Visit Us",
+// value: "Add your business location",
+// href: null,
+// },
+// {
+// icon: Clock,
+// title: "Business Hours",
+// value: "Add your business hours",
+// href: null,
+// },
+// ];
+
 const contactDetails = [
-{
-icon: Phone,
-title: "Call Us",
-value: "Add your business phone number",
-href: null,
-},
-{
-icon: Mail,
-title: "Email Us",
-value: "Add your business email address",
-href: null,
-},
-{
-icon: MapPin,
-title: "Visit Us",
-value: "Add your business location",
-href: null,
-},
-{
-icon: Clock,
-title: "Business Hours",
-value: "Add your business hours",
-href: null,
-},
+  {
+    icon: Phone,
+    title: "Call Us",
+    value: "+91 98765 43210",
+    href: "tel:+919876543210",
+  },
+  {
+    icon: Mail,
+    title: "Email Us",
+    value: "hello@thehealthydiet.com",
+    href: "mailto:hello@thehealthydiet.com",
+  },
+  {
+    icon: MapPin,
+    title: "Visit Us",
+    value: "The Healthy Diet, Valsad, Gujarat, India",
+    href: null,
+  },
+  {
+    icon: Clock,
+    title: "Business Hours",
+    value: "Monday – Saturday, 9:00 AM – 8:00 PM",
+    href: null,
+  },
 ];
 
 return ( <main className="min-h-screen bg-[#FBFCF7] text-[#183D2B]">
@@ -133,17 +174,20 @@ We're here to help </span>
       <p className="mt-2 text-sm leading-6 text-gray-500">
         Fill in the details below.
       </p>
-
-      {success && (
-        <div
-          role="status"
-          className="mt-5 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800"
-        >
-          Thank you! Your form passed frontend validation. The message
-          has not been sent yet because the backend is not connected.
-        </div>
-      )}
-
+{success && (
+  <div
+    role="status"
+    className="mt-5 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800"
+  >
+    <p className="font-semibold">
+      Thank you for reaching out! 🌿
+    </p>
+    <p className="mt-1">
+      Your message has been sent successfully. Our team will get back
+      to you soon.
+    </p>
+  </div>
+)}
       <form onSubmit={handleSubmit} className="mt-7 space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
@@ -231,10 +275,10 @@ We're here to help </span>
           <Send size={18} />
         </button>
 
-        <p className="text-center text-xs leading-5 text-gray-400">
+        {/* <p className="text-center text-xs leading-5 text-gray-400">
           Your message will be sent once this form is connected to
           the website's backend.
-        </p>
+        </p> */}
       </form>
     </div>
   </section>

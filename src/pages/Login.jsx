@@ -897,26 +897,27 @@ function Login() {
                   </div>
                 </div>
 
-                {/* Google */}
-                {selectedRole === "user" && (
-                  <div className="flex w-full justify-center overflow-hidden">
-                    <div className="w-full">
-                      <GoogleLogin
-                        onSuccess={handleGoogleSuccess}
-                        onError={() =>
-                          setError(
-                            "Google login failed. Please try again."
-                          )
-                        }
-                        useOneTap={false}
-                        theme="outline"
-                        size="large"
-                        text="continue_with"
-                        shape="rectangular"
-                      />
-                    </div>
-                  </div>
-                )}
+             
+{/* Google */}
+{selectedRole === "user" && (
+  <div className="flex w-full justify-center">
+    <div className="flex w-full justify-center">
+      <GoogleLogin
+        onSuccess={handleGoogleSuccess}
+        onError={() =>
+          setError("Google login failed. Please try again.")
+        }
+        useOneTap={false}
+        theme="outline"
+        size="large"
+        text="continue_with"
+        shape="rectangular"
+        width="320"
+      />
+    </div>
+  </div>
+)}
+
 
                 {/* Register */}
                 <p className="pt-1 text-center text-sm text-[#66736B]">

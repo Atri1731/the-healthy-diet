@@ -1,6 +1,6 @@
 import {ArrowLeft, Check, CreditCard, MapPin, Phone, User} from "lucide-react";
 import {Link, useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { useEffect, useState, useRef } from "react";
 // import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import {useCart} from "../context/CartContext";
@@ -8,6 +8,12 @@ import api from "../services/api";
 import {useAuth} from "../context/AuthContext";
 
 function Checkout() {
+const nameRef = useRef(null);
+const phoneRef = useRef(null);
+const emailRef = useRef(null);
+const addressRef = useRef(null);
+const cityRef = useRef(null);
+const pincodeRef = useRef(null);
   const navigate = useNavigate();
 
   const {cartItems, cartTotal, clearCart} = useCart();
@@ -22,7 +28,38 @@ function Checkout() {
     city: "",
     pincode: "",
   });
+const scrollToFirstInvalidField = (newErrors) => {
+  const fieldRefs = {
+    name: nameRef,
+    phone: phoneRef,
+    email: emailRef,
+    address: addressRef,
+    city: cityRef,
+    pincode: pincodeRef,
+  };
 
+  const firstInvalidField = Object.keys(fieldRefs).find(
+    (field) => newErrors[field]
+  );
+
+  if (firstInvalidField) {
+    const input = fieldRefs[firstInvalidField].current;
+
+    if (input) {
+      input.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      // Focus after scrolling begins.
+      setTimeout(() => input.focus(), 350);
+    }
+
+    return false;
+  }
+
+  return true;
+};
   const [errors, setErrors] = useState({});
 
   const deliveryFee = cartTotal >= 499 ? 0 : 40;
@@ -171,9 +208,56 @@ useEffect(() => {
       return;
     }
 
-    if (!validateForm() || cartItems.length === 0) {
-      return;
-    }
+    const isValid = validateForm();
+
+if (!isValid) {
+  const newErrors = {};
+
+  if (!formData.name.trim()) {
+    newErrors.name = "Please enter your name.";
+  } else if (formData.name.trim().length < 2) {
+    newErrors.name = "Name must be at least 2 characters.";
+  } else if (!/^[A-Za-z ]+$/.test(formData.name.trim())) {
+    newErrors.name = "Name can contain letters only.";
+  }
+
+  if (!formData.phone.trim()) {
+    newErrors.phone = "Please enter your phone number.";
+  } else if (!/^[0-9]{10}$/.test(formData.phone)) {
+    newErrors.phone = "Enter a valid 10-digit phone number.";
+  }
+
+  if (!formData.email.trim()) {
+    newErrors.email = "Please enter your email.";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    newErrors.email = "Enter a valid email address.";
+  }
+
+  if (!formData.address.trim()) {
+    newErrors.address = "Please enter your delivery address.";
+  } else if (formData.address.trim().length < 10) {
+    newErrors.address = "Please enter a more complete address.";
+  }
+
+  if (!formData.city.trim()) {
+    newErrors.city = "Please enter your city.";
+  } else if (!/^[A-Za-z ]+$/.test(formData.city.trim())) {
+    newErrors.city = "City can contain letters only.";
+  }
+
+  if (!formData.pincode.trim()) {
+    newErrors.pincode = "Please enter your pincode.";
+  } else if (!/^[0-9]{6}$/.test(formData.pincode)) {
+    newErrors.pincode = "Enter a valid 6-digit pincode.";
+  }
+
+  scrollToFirstInvalidField(newErrors);
+  return;
+}
+
+if (cartItems.length === 0) {
+  return;
+}
 
     if (placingOrder) return;
 
@@ -323,6 +407,7 @@ useEffect(() => {
                   </label>
 
                   <input
+                    ref={nameRef}
                     type="text"
                     name="name"
                     value={formData.name}
@@ -353,6 +438,7 @@ useEffect(() => {
                     />
 
                     <input
+                      ref={phoneRef}
                       type="tel"
                       name="phone"
                       value={formData.phone}
@@ -381,6 +467,7 @@ useEffect(() => {
                   </label>
 
                   <input
+                    ref={emailRef}
                     type="email"
                     name="email"
                     value={formData.email}
@@ -426,6 +513,7 @@ useEffect(() => {
                   </label>
 
                   <textarea
+                    ref={addressRef}
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
@@ -453,6 +541,7 @@ useEffect(() => {
                     </label>
 
                     <input
+                      ref={cityRef}
                       type="text"
                       name="city"
                       value={formData.city}
@@ -479,6 +568,7 @@ useEffect(() => {
                     </label>
 
                     <input
+                      ref={pincodeRef}
                       type="text"
                       name="pincode"
                       value={formData.pincode}

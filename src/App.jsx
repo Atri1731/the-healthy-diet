@@ -27,6 +27,8 @@ import AdminProducts from "./pages/admin/AdminProducts";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
+import AdminContactMessages from "./pages/admin/AdminContactMessages";
+
 function App() {
   return (
      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
@@ -69,6 +71,7 @@ function App() {
             <Route path="users" element={<AdminUsers />} />
             <Route path="products" element={<AdminProducts />} />
             <Route path="orders" element={<AdminOrders />} />
+            <Route path="contact-messages" element={<AdminContactMessages />} />
           </Route>
         </Route>
       </Routes>

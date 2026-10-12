@@ -14,6 +14,7 @@ const adminRoutes = require("./routes/admin.routes");
 const productRoutes = require("./routes/product.routes");
 const userDataRoutes = require("./routes/userData.routes");
 const profileRoutes = require("./routes/profile.routes");
+const contactRoutes = require("./routes/contact.routes");
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/user-data", userDataRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/contact", contactRoutes);
 
 app.get("/", (req, res) => {
   res.json({

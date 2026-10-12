@@ -230,10 +230,10 @@ export function CartProvider({ children }) {
         .filter((item) => item.quantity > 0)
     );
   };
-
-  const clearCart = () => {
-    saveCart([]);
-  };
+  
+const clearCart = () => {
+  saveCart([]);
+};
 
   const cartCount = cartItems.reduce(
     (total, item) => total + Number(item.quantity || 0),
