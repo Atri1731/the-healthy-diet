@@ -1,5 +1,4 @@
-
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
@@ -25,57 +24,56 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminProducts from "./pages/admin/AdminProducts";
 
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import {GoogleOAuthProvider} from "@react-oauth/google";
 
 import AdminContactMessages from "./pages/admin/AdminContactMessages";
 
 function App() {
   return (
-     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-    <BrowserRouter>
-      <Routes>
-        {/* Customer website: shared navbar */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/menu/:id" element={<MealDetails />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/favorites" element={<Favorites />} />
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <BrowserRouter>
+        <Routes>
+          {/* Customer website: shared navbar */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/menu/:id" element={<MealDetails />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/favorites" element={<Favorites />} />
 
-          {/* Login and Register use a compact navbar */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+            {/* Login and Register use a compact navbar */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* Protected customer pages */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route
-              path="/order-success"
-              element={<OrderSuccess />}
-            />
-            <Route path="/checkout" element={<Checkout />} />
+            {/* Protected customer pages */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/order-success" element={<OrderSuccess />} />
+              <Route path="/checkout" element={<Checkout />} />
+            </Route>
           </Route>
-        </Route>
 
-        {/* Admin website: separate admin layout */}
-        <Route element={<AdminRoute />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route
-              path="dashboard"
-              element={<AdminDashboard />}
-            />
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="contact-messages" element={<AdminContactMessages />} />
+          {/* Admin website: separate admin layout */}
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="products/new" element={<AdminProducts />} />
+              <Route path="products/edit/:id" element={<AdminProducts />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route
+                path="contact-messages"
+                element={<AdminContactMessages />}
+              />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
     </GoogleOAuthProvider>
   );
 }
