@@ -12,7 +12,7 @@ const FavoriteContext = createContext(null);
 
 const API_BASE_URL = (
   import.meta.env.VITE_API_URL || "http://localhost:5001/api"
-).replace(/\/$/, "");
+).replace(/\/+$/, "");
 
 function getFavoritesStorageKey(user) {
   if (!user) return "healthyDietFavorites_guest";
@@ -32,8 +32,10 @@ function readFavorites(key) {
   try {
     const saved = localStorage.getItem(key);
     const parsed = saved ? JSON.parse(saved) : [];
+
     return Array.isArray(parsed) ? parsed : [];
-  } catch {
+  } catch (error) {
+    console.error("Error reading saved favorites:", error);
     return [];
   }
 }
@@ -51,11 +53,10 @@ export function FavoriteProvider({ children }) {
 
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
 
-  // Load favorites for the current account.
   useEffect(() => {
     let cancelled = false;
 
-setFavoritesLoaded(false);
+    setFavoritesLoaded(false);
 
     setFavoriteState({
       key: storageKey,
@@ -63,42 +64,37 @@ setFavoritesLoaded(false);
     });
 
     const loadFavorites = async () => {
-      // Guests keep favorites in local storage.
+      // Guests load favorites from localStorage.
       if (!isAuthenticated || !token) {
         if (!cancelled) {
           setFavoriteState({
             key: storageKey,
             items: readFavorites(storageKey),
           });
+
           setFavoritesLoaded(true);
         }
+
         return;
       }
 
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/user-data`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${API_BASE_URL}/user-data`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
-          throw new Error(
-            "Failed to load favorites from server"
-          );
+          throw new Error("Failed to load favorites from server");
         }
 
         const result = await response.json();
         const items = result.data?.favorites;
 
         if (!Array.isArray(items)) {
-          throw new Error(
-            "Invalid favorites response from server"
-          );
+          throw new Error("Invalid favorites response from server");
         }
 
         if (!cancelled) {
@@ -113,19 +109,20 @@ setFavoritesLoaded(false);
               JSON.stringify(items)
             );
           }
+
+          setFavoritesLoaded(true);
         }
       } catch (error) {
-        console.error(
-          "Error loading saved favorites:",
-          error
-        );
+        console.error("Error loading saved favorites:", error);
 
-        // Show the local cache if the API is unavailable.
+        // Fall back to the locally saved favorites.
         if (!cancelled) {
           setFavoriteState({
             key: storageKey,
             items: readFavorites(storageKey),
           });
+
+          setFavoritesLoaded(true);
         }
       }
     };
@@ -137,20 +134,18 @@ setFavoritesLoaded(false);
     };
   }, [storageKey, token, isAuthenticated]);
 
-  // Prevent displaying another account's favorites.
+  // Avoid showing another account's favorites.
   const favorites =
     favoriteState.key === storageKey
       ? favoriteState.items
       : [];
 
   const saveFavorites = (items) => {
-    // Update the interface immediately.
     setFavoriteState({
       key: storageKey,
       items,
     });
 
-    // Save a local cache.
     if (storageKey) {
       try {
         localStorage.setItem(
@@ -158,14 +153,11 @@ setFavoritesLoaded(false);
           JSON.stringify(items)
         );
       } catch (error) {
-        console.error(
-          "Error caching favorites:",
-          error
-        );
+        console.error("Error caching favorites:", error);
       }
     }
 
-    // Persist logged-in customers' favorites in MongoDB.
+    // Save logged-in customers' favorites to MongoDB.
     if (isAuthenticated && token) {
       fetch(`${API_BASE_URL}/user-data/favorites`, {
         method: "PUT",
@@ -220,6 +212,7 @@ setFavoritesLoaded(false);
         favorites,
         isFavorite,
         toggleFavorite,
+        favoritesLoaded,
       }}
     >
       {children}
