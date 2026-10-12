@@ -314,7 +314,8 @@ function FoodCard({ food }) {
   const location = useLocation();
 
   const [added, setAdded] = useState(false);
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
+const [showLoginPopup, setShowLoginPopup] = useState(false);
+const [loginAction, setLoginAction] = useState("cart");
   const timeoutRef = useRef(null);
 
   const favorite = isFavorite(food.id);
@@ -344,39 +345,53 @@ function FoodCard({ food }) {
     };
   }, [showLoginPopup]);
 
-  const handleFavoriteClick = () => {
-    toggleFavorite(food);
-  };
 
-  const handleAddToCart = () => {
-    if (!isAuthenticated) {
-      setShowLoginPopup(true);
-      return;
-    }
 
-    addToCart(food);
-    setAdded(true);
+const handleFavoriteClick = () => {
+  if (!isAuthenticated) {
+    setLoginAction("favorite");
+    setShowLoginPopup(true);
+    return;
+  }
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+  toggleFavorite(food);
+};
 
-    timeoutRef.current = setTimeout(() => {
-      setAdded(false);
-      timeoutRef.current = null;
-    }, 1400);
-  };
 
-  const handleLogin = () => {
-    setShowLoginPopup(false);
+const handleAddToCart = () => {
+  if (!isAuthenticated) {
+    setLoginAction("cart");
+    setShowLoginPopup(true);
+    return;
+  }
 
-    navigate("/login", {
-      state: {
-        redirectTo: location.pathname + location.search,
-        addToCart: food,
-      },
-    });
-  };
+  addToCart(food);
+  setAdded(true);
+
+  if (timeoutRef.current) {
+    clearTimeout(timeoutRef.current);
+  }
+
+  timeoutRef.current = setTimeout(() => {
+    setAdded(false);
+    timeoutRef.current = null;
+  }, 1400);
+};
+
+
+const handleLogin = () => {
+  setShowLoginPopup(false);
+
+  navigate("/login", {
+    state: {
+      redirectTo: location.pathname + location.search,
+      ...(loginAction === "cart"
+        ? { addToCart: food }
+        : { addToFavorite: food }),
+    },
+  });
+};
+
 
   return (
     <>
@@ -519,13 +534,14 @@ function FoodCard({ food }) {
                 id="cart-login-title"
                 className="text-2xl font-bold tracking-tight"
               >
-                Login to add to cart
+              {loginAction === "cart"
+  ? "Login to add to cart"
+  : "Login to save your favorite"}
               </h2>
 
-              <p className="mx-auto mt-3 max-w-[290px] text-sm leading-6 text-white/85">
-                Sign in to add your favorite healthy meals to your cart and
-                make your next meal easier.
-              </p>
+             {loginAction === "cart"
+  ? "Sign in to add your favorite healthy meals to your cart."
+  : "Sign in to save this meal to your favorites and find it easily later."}
             </div>
 
             <div className="px-7 pb-7 pt-6">
@@ -547,7 +563,9 @@ function FoodCard({ food }) {
                     {food.name}
                   </p>
                   <p className="mt-1 text-xs text-[#66736B]">
-                    Ready to add to your cart
+                    {loginAction === "cart"
+  ? "Ready to add to your cart"
+  : "Save this meal to your favorites"}
                   </p>
                   <p className="mt-1 text-sm font-bold text-[#174D32]">
                     ₹{food.price}

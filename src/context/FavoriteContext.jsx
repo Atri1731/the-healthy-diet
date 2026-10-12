@@ -49,9 +49,13 @@ export function FavoriteProvider({ children }) {
     items: [],
   });
 
+  const [favoritesLoaded, setFavoritesLoaded] = useState(false);
+
   // Load favorites for the current account.
   useEffect(() => {
     let cancelled = false;
+
+setFavoritesLoaded(false);
 
     setFavoriteState({
       key: storageKey,
@@ -66,6 +70,7 @@ export function FavoriteProvider({ children }) {
             key: storageKey,
             items: readFavorites(storageKey),
           });
+          setFavoritesLoaded(true);
         }
         return;
       }

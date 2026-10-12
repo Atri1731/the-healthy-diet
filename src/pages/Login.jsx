@@ -498,6 +498,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { useFavorites } from "../context/FavoriteContext";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -513,9 +514,13 @@ function Login() {
   const location = useLocation();
   const { login } = useAuth();
   const { addToCart } = useCart();
+  const { toggleFavorite } = useFavorites();
 
-  const redirectTo = location.state?.redirectTo || "/";
+ const redirectTo = location.state?.from
+  ? `${location.state.from.pathname}${location.state.from.search || ""}${location.state.from.hash || ""}`
+  : location.state?.redirectTo || "/";
   const pendingCartItem = location.state?.addToCart;
+const pendingFavoriteItem = location.state?.addToFavorite;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -528,15 +533,23 @@ function Login() {
     setError("");
   };
 
-  const finishCustomerLogin = (user, token) => {
-    login(user, token);
 
-    if (pendingCartItem) {
-      addToCart(pendingCartItem);
-    }
+const finishCustomerLogin = (user, token) => {
+  login(user, token);
 
-    navigate(redirectTo, { replace: true });
-  };
+  if (pendingCartItem) {
+    addToCart(pendingCartItem);
+  }
+
+  if (
+    pendingFavoriteItem &&
+    !isFavorite(pendingFavoriteItem.id)
+  ) {
+    toggleFavorite(pendingFavoriteItem);
+  }
+
+  navigate(redirectTo, { replace: true });
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();

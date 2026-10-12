@@ -1,12 +1,6 @@
+import {createContext, useContext, useEffect, useState} from "react";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-
-import { useAuth } from "./AuthContext";
+import {useAuth} from "./AuthContext";
 
 const CartContext = createContext(null);
 
@@ -21,9 +15,7 @@ function getCartStorageKey(user) {
 
   if (!accountId) return null;
 
-  return `healthyDietCart_user_${String(accountId)
-    .trim()
-    .toLowerCase()}`;
+  return `healthyDietCart_user_${String(accountId).trim().toLowerCase()}`;
 }
 
 function readCart(key) {
@@ -40,12 +32,12 @@ function readCart(key) {
   }
 }
 
-export function CartProvider({ children }) {
-  const { user, token } = useAuth();
+export function CartProvider({children}) {
+  const {user, token} = useAuth();
 
   const isAuthenticated = Boolean(user && token);
   const storageKey = getCartStorageKey(user);
-
+  const [cartLoaded, setCartLoaded] = useState(false);
   const [cartState, setCartState] = useState({
     key: storageKey,
     items: [],
@@ -54,6 +46,7 @@ export function CartProvider({ children }) {
   // Load the correct cart when the account or login changes.
   useEffect(() => {
     let cancelled = false;
+    setCartLoaded(false);
 
     setCartState({
       key: storageKey,
@@ -68,20 +61,18 @@ export function CartProvider({ children }) {
             key: storageKey,
             items: readCart(storageKey),
           });
+          setCartLoaded(true);
         }
         return;
       }
 
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/user-data`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${API_BASE_URL}/user-data`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Failed to load cart from server");
@@ -101,10 +92,7 @@ export function CartProvider({ children }) {
           });
 
           if (storageKey) {
-            localStorage.setItem(
-              storageKey,
-              JSON.stringify(items)
-            );
+            localStorage.setItem(storageKey, JSON.stringify(items));
           }
         }
       } catch (error) {
@@ -128,8 +116,7 @@ export function CartProvider({ children }) {
   }, [storageKey, token, isAuthenticated]);
 
   // Never display the previous account's cart during a switch.
-  const cartItems =
-    cartState.key === storageKey ? cartState.items : [];
+  const cartItems = cartState.key === storageKey ? cartState.items : [];
 
   const saveCart = (items) => {
     // Update the UI immediately.
@@ -141,10 +128,7 @@ export function CartProvider({ children }) {
     // Keep a local cache for guests and temporary offline use.
     if (storageKey) {
       try {
-        localStorage.setItem(
-          storageKey,
-          JSON.stringify(items)
-        );
+        localStorage.setItem(storageKey, JSON.stringify(items));
       } catch (error) {
         console.error("Error caching cart:", error);
       }
@@ -165,9 +149,7 @@ export function CartProvider({ children }) {
         .then(async (response) => {
           if (!response.ok) {
             const result = await response.json().catch(() => ({}));
-            throw new Error(
-              result.message || "Failed to save cart"
-            );
+            throw new Error(result.message || "Failed to save cart");
           }
         })
         .catch((error) => {
@@ -178,7 +160,7 @@ export function CartProvider({ children }) {
 
   const addToCart = (food) => {
     const existingItem = cartItems.find(
-      (item) => String(item.id) === String(food.id)
+      (item) => String(item.id) === String(food.id),
     );
 
     const updatedItems = existingItem
@@ -188,19 +170,15 @@ export function CartProvider({ children }) {
                 ...item,
                 quantity: Number(item.quantity || 0) + 1,
               }
-            : item
+            : item,
         )
-      : [...cartItems, { ...food, quantity: 1 }];
+      : [...cartItems, {...food, quantity: 1}];
 
     saveCart(updatedItems);
   };
 
   const removeFromCart = (id) => {
-    saveCart(
-      cartItems.filter(
-        (item) => String(item.id) !== String(id)
-      )
-    );
+    saveCart(cartItems.filter((item) => String(item.id) !== String(id)));
   };
 
   const increaseQuantity = (id) => {
@@ -211,8 +189,8 @@ export function CartProvider({ children }) {
               ...item,
               quantity: Number(item.quantity || 0) + 1,
             }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
@@ -225,26 +203,25 @@ export function CartProvider({ children }) {
                 ...item,
                 quantity: Number(item.quantity || 0) - 1,
               }
-            : item
+            : item,
         )
-        .filter((item) => item.quantity > 0)
+        .filter((item) => item.quantity > 0),
     );
   };
-  
-const clearCart = () => {
-  saveCart([]);
-};
+
+  const clearCart = () => {
+    saveCart([]);
+  };
 
   const cartCount = cartItems.reduce(
     (total, item) => total + Number(item.quantity || 0),
-    0
+    0,
   );
 
   const cartTotal = cartItems.reduce(
     (total, item) =>
-      total +
-      Number(item.price || 0) * Number(item.quantity || 0),
-    0
+      total + Number(item.price || 0) * Number(item.quantity || 0),
+    0,
   );
 
   return (
@@ -253,6 +230,7 @@ const clearCart = () => {
         cartItems,
         cartCount,
         cartTotal,
+        cartLoaded,
         addToCart,
         removeFromCart,
         increaseQuantity,
@@ -269,9 +247,7 @@ export function useCart() {
   const context = useContext(CartContext);
 
   if (!context) {
-    throw new Error(
-      "useCart must be used inside CartProvider"
-    );
+    throw new Error("useCart must be used inside CartProvider");
   }
 
   return context;

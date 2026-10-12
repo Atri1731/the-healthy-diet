@@ -4,13 +4,14 @@ import Footer from "../components/Footer";
 import {useCart} from "../context/CartContext";
 
 function Cart() {
-  const {
-    cartItems,
-    cartTotal,
-    increaseQuantity,
-    decreaseQuantity,
-    removeFromCart,
-  } = useCart();
+const {
+  cartItems,
+  cartTotal,
+  cartLoaded,
+  increaseQuantity,
+  decreaseQuantity,
+  removeFromCart,
+} = useCart();
 
   const deliveryFee = cartTotal > 499 || cartTotal === 0 ? 0 : 40;
   const finalTotal = cartTotal + deliveryFee;
@@ -34,7 +35,15 @@ function Cart() {
           </p>
         </div>
 
-        {cartItems.length === 0 ? (
+      {!cartLoaded ? (
+  <div className="mt-10 flex min-h-[300px] items-center justify-center">
+    <p className="text-sm font-medium text-[#66736B]">
+      Loading your cart...
+    </p>
+  </div>
+) : cartItems.length === 0 ? (
+
+          
           /* Empty cart */
           <div className="mt-10 flex flex-col items-center justify-center rounded-[24px] border border-[#E5E1D5] bg-white px-6 py-16 text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E7EFDC]">

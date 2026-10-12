@@ -4,6 +4,7 @@ import FoodCard from "../components/FoodCard";
 import api from "../services/api";
 import {useSearchParams} from "react-router-dom";
 import FloatingCartBar from "../components/FloatingCartBar";
+import { useFavorites } from "../context/FavoriteContext";
 
 const categories = [
   "All",
@@ -20,7 +21,7 @@ function Menu() {
   const [sort, setSort] = useState("popular");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+const { favorites, favoritesLoaded } = useFavorites();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [activeCategory, setActiveCategory] = useState(
@@ -84,6 +85,17 @@ function Menu() {
 
     return result;
   }, [foods, search, activeCategory, sort]);
+
+
+const menuFoods = useMemo(() => {
+  const favoriteIds = new Set(
+    favorites.map((food) => String(food.id))
+  );
+
+  return filteredFoods.filter(
+    (food) => !favoriteIds.has(String(food.id))
+  );
+}, [filteredFoods, favorites]);
 
   return (
     <main className="min-h-screen bg-[#FCFAF4]">
@@ -231,8 +243,8 @@ function Menu() {
           </div>
 
           <p className="text-xs text-[#66736B] sm:text-sm">
-            {filteredFoods.length}{" "}
-            {filteredFoods.length === 1 ? "meal" : "meals"}
+            {menuFoods.length}{" "}
+{menuFoods.length === 1 ? "meal" : "meals"}
           </p>
         </div>
 
@@ -254,11 +266,17 @@ function Menu() {
               Try Again
             </button>
           </div>
-        ) : filteredFoods.length > 0 ? (
+       ) : !favoritesLoaded ? (
+  <div className="flex min-h-[300px] items-center justify-center">
+    <p className="text-sm font-medium text-[#66736B]">
+      Loading your favorites...
+    </p>
+  </div>
+) : menuFoods.length > 0 ? (
           <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
-            {filteredFoods.map((food) => (
-              <FoodCard key={food.id} food={food} />
-            ))}
+           {menuFoods.map((food) => (
+  <FoodCard key={food.id} food={food} />
+))}
           </div>
         ) : (
           <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
