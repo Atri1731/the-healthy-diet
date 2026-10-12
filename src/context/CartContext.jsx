@@ -85,27 +85,30 @@ export function CartProvider({children}) {
           throw new Error("Invalid cart response from server");
         }
 
-        if (!cancelled) {
-          setCartState({
-            key: storageKey,
-            items,
-          });
+     if (!cancelled) {
+  setCartState({
+    key: storageKey,
+    items,
+  });
 
-          if (storageKey) {
-            localStorage.setItem(storageKey, JSON.stringify(items));
-          }
-        }
-      } catch (error) {
-        console.error("Error loading saved cart:", error);
+  if (storageKey) {
+    localStorage.setItem(storageKey, JSON.stringify(items));
+  }
 
-        // Use the local cache if the API is temporarily unavailable.
-        if (!cancelled) {
-          setCartState({
-            key: storageKey,
-            items: readCart(storageKey),
-          });
-        }
-      }
+  setCartLoaded(true);
+}
+     } catch (error) {
+  console.error("Error loading saved cart:", error);
+
+  if (!cancelled) {
+    setCartState({
+      key: storageKey,
+      items: readCart(storageKey),
+    });
+
+    setCartLoaded(true);
+  }
+}
     };
 
     loadCart();
