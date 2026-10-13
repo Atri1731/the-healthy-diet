@@ -346,8 +346,10 @@ const handleAddToCart = () => {
 
   return (
     <>
-      <article className="group overflow-hidden rounded-[20px] border border-[#E5E1D5] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(24,49,38,0.10)]">
-        <div className="relative aspect-[1.15/0.9] overflow-hidden">
+      
+<article className="group flex h-full flex-col overflow-hidden rounded-[20px] border border-[#E5E1D5] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(24,49,38,0.10)]">
+
+       <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-[#F7F3E8]">
           <Link
             to={`/menu/${food.id}`}
             aria-label={`View details for ${food.name}`}
@@ -388,7 +390,7 @@ const handleAddToCart = () => {
           </button>
         </div>
 
-        <div className="p-4">
+       <div className="flex flex-1 flex-col p-4">
           <h3 className="text-[15px] font-bold text-[#183126]">
             <Link
               to={`/menu/${food.id}`}
@@ -398,9 +400,12 @@ const handleAddToCart = () => {
             </Link>
           </h3>
 
-          <p className="mt-2 min-h-[40px] text-xs leading-5 text-[#66736B]">
-            {food.description}
-          </p>
+          
+<p className="mt-2 min-h-[60px] overflow-hidden text-xs leading-5 text-[#66736B] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
+  {food.description}
+</p>
+
+
 
           <div className="mt-3 flex items-center gap-4">
             <span className="flex items-center gap-1 text-xs font-medium">
@@ -416,7 +421,7 @@ const handleAddToCart = () => {
             </span>
           </div>
 
-          <div className="mt-4 flex items-center justify-between gap-2">
+          <div className="mt-auto flex items-center justify-between gap-2 pt-4">
             <span className="text-lg font-bold text-[#174D32]">
               ₹{food.price}
             </span>

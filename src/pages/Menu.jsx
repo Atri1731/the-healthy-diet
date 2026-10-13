@@ -86,18 +86,16 @@ function Menu() {
     return result;
   }, [foods, search, activeCategory, sort]);
 
-  const menuFoods = useMemo(() => {
-    const favoriteIds = new Set(favorites.map((food) => String(food.id)));
 
-    return filteredFoods.filter((food) => !favoriteIds.has(String(food.id)));
-  }, [filteredFoods, favorites]);
+const menuFoods = filteredFoods;
+
 
   return (
     <main className="min-h-screen bg-[#FCFAF4] pb-10">
       {/* =================================
           MENU HERO
       ================================= */}
-      <section className="w-full bg-[#F7F3E8] px-5 pb-10 pt-12 sm:px-8 sm:pb-12 sm:pt-16 lg:px-12 lg:pb-14 lg:pt-20 xl:px-16 2xl:px-20">
+      <section className="w-full bg-[#F7F3E8] px-5 pb-8 pt-10 sm:px-8 sm:pb-9 sm:pt-12 lg:px-12 lg:pb-10 lg:pt-14 xl:px-16 2xl:px-20">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-[11px] font-bold uppercase tracking-[3px] text-[#6B9F45]">
             Our Menu
@@ -267,7 +265,8 @@ function Menu() {
             </p>
           </div>
         ) : menuFoods.length > 0 ? (
-          <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
+          <div className="mt-7 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-5">
+            {" "}
             {menuFoods.map((food) => (
               <FoodCard key={food.id} food={food} />
             ))}

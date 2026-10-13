@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -9,6 +9,7 @@ import {
   Clock,
   Leaf,
   Utensils,
+  Check,
 } from "lucide-react";
 import api from "../services/api";
 import { useCart } from "../context/CartContext";
@@ -18,6 +19,17 @@ import { useAuth } from "../context/AuthContext";
 
 function MealDetails() {
     
+const [added, setAdded] = useState(false);
+const timeoutRef = useRef(null);
+
+useEffect(() => {
+  return () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+}, []);
+
   const { id } = useParams();
   const { addToCart } = useCart();
   const { favorites, toggleFavorite } = useFavorites();
@@ -77,6 +89,25 @@ const navigate = useNavigate();
         (food) => String(food.id) === String(meal.id)
       )
     : false;
+
+
+
+
+const handleAddToCart = () => {
+  addToCart(meal);
+  setAdded(true);
+
+  if (timeoutRef.current) {
+    clearTimeout(timeoutRef.current);
+  }
+
+  timeoutRef.current = setTimeout(() => {
+    setAdded(false);
+    timeoutRef.current = null;
+  }, 1400);
+};
+
+
 
   if (loading) {
     return (
@@ -196,26 +227,29 @@ const navigate = useNavigate();
                 ₹{meal.price}
               </span>
 
-              <button
-                type="button"
-  onClick={() => {
-  if (!isAuthenticated) {
-    navigate("/login", {
-      state: {
-        redirectTo: `/menu/${meal.id}`,
-        addToCart: meal,
-      },
-    });
-    return;
-  }
+<button
+  type="button"
+  onClick={handleAddToCart}
+  aria-live="polite"
+  className={`inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 font-semibold text-white transition-all duration-300 active:scale-95 ${
+    added
+      ? "scale-105 bg-[#55863B] shadow-md shadow-green-100"
+      : "bg-[#174D32] hover:-translate-y-0.5 hover:bg-[#0D3522] hover:shadow-md"
+  }`}
+>
+  {added ? (
+    <>
+      <Check size={19} className="animate-bounce" />
+      Added!
+    </>
+  ) : (
+    <>
+      <ShoppingCart size={19} />
+      Add to Cart
+    </>
+  )}
+</button>
 
-  addToCart(meal);
-}}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#174D32] px-7 py-3.5 font-semibold text-white transition hover:bg-[#103B25]"
-              >
-                <ShoppingCart size={19} />
-                Add to Cart
-              </button>
             </div>
           </div>
         </section>
