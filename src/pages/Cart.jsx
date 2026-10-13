@@ -2,6 +2,7 @@ import {ArrowLeft, Minus, Plus, ShoppingBag, Trash2} from "lucide-react";
 import {Link} from "react-router-dom";
 import Footer from "../components/Footer";
 import {useCart} from "../context/CartContext";
+import { useEffect } from "react";
 
 function Cart() {
 const {
@@ -12,6 +13,14 @@ const {
   decreaseQuantity,
   removeFromCart,
 } = useCart();
+
+useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "instant",
+  });
+}, []);
 
   const deliveryFee = cartTotal > 499 || cartTotal === 0 ? 0 : 40;
   const finalTotal = cartTotal + deliveryFee;

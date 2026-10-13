@@ -1,18 +1,25 @@
-import { ShoppingCart, ChevronRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import {ShoppingCart, ChevronRight} from "lucide-react";
+import {useNavigate} from "react-router-dom";
+import {useCart} from "../context/CartContext";
 
 export default function FloatingCartBar() {
   const navigate = useNavigate();
-  const { cartCount } = useCart();
+  const {cartCount} = useCart();
+
+ 
 
   if (cartCount === 0) {
     return null;
   }
 
-  const handleViewCart = () => {
-    navigate("/cart");
-  };
+const handleViewCart = () => {
+  navigate("/cart");
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "instant",
+  });
+};
 
   return (
     <button
@@ -85,9 +92,7 @@ export default function FloatingCartBar() {
 
       {/* Right side */}
       <div className="flex shrink-0 items-center gap-1.5">
-        <span className="text-sm font-bold sm:text-base">
-          View Cart
-        </span>
+        <span className="text-sm font-bold sm:text-base">View Cart</span>
 
         <ChevronRight
           size={20}
