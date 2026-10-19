@@ -91,7 +91,7 @@ const menuFoods = filteredFoods;
 
 
   return (
-    <main className="min-h-screen bg-[#FCFAF4] pb-10">
+   <main className="min-h-screen bg-[#FCFAF4] pb-10">
       {/* =================================
           MENU HERO
       ================================= */}

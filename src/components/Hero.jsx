@@ -1,5 +1,3 @@
-
-
 // import { Link } from "react-router-dom";
 // import { ArrowRight, Leaf, Heart, Truck } from "lucide-react";
 
@@ -312,7 +310,6 @@
 // }
 
 // export default Hero;
-
 
 // import { useEffect, useState } from "react";
 // import { Link } from "react-router-dom";
@@ -728,12 +725,6 @@
 
 // export default Hero;
 
-
-
-
-
-
-
 // import { useCallback, useEffect, useRef, useState } from "react";
 // import { Link } from "react-router-dom";
 // import {
@@ -1038,9 +1029,8 @@
 // //   lg:h-[500px] xl:h-[540px] lg:rounded-[38px]
 // // "
 
-
 // className="
- 
+
 // group relative block h-[300px] w-full overflow-hidden
 // rounded-2xl bg-[#E5EEDB]
 // shadow-[0_20px_45px_rgba(23,77,50,0.16)]
@@ -1069,7 +1059,6 @@
 //                 //   }
 //                 // `}
 
-
 // className={`
 //   absolute inset-0 h-full w-full object-cover object-center
 //   transition-[opacity,transform] duration-700 ease-in-out
@@ -1081,7 +1070,6 @@
 //   }
 //   group-hover:scale-[1.03]
 // `}
-
 
 //               />
 //             )}
@@ -1095,7 +1083,7 @@
 //                 event.currentTarget.src = fallbackImage;
 //               }}
 //               className={`
-              
+
 // absolute inset-0 h-full w-full object-cover object-center
 
 //                 transition-[opacity,transform] duration-700 ease-in-out
@@ -1108,7 +1096,7 @@
 //                 group-hover:scale-[1.02]
 //               `}
 //             />
-            
+
 // <div
 //   aria-hidden="true"
 //   className="pointer-events-none absolute inset-0 z-[5] bg-gradient-to-t from-[#10291D]/45 via-transparent to-transparent"
@@ -1166,7 +1154,6 @@
 //             //   sm:bottom-7 sm:left-6 sm:gap-3 sm:px-4 sm:py-3
 //             // "
 
-
 // className="
 //   absolute bottom-4 left-4 z-20 flex max-w-[85%]
 //   items-center gap-3 rounded-2xl
@@ -1176,7 +1163,6 @@
 //   hover:-translate-y-1
 //   sm:bottom-6 sm:left-6
 // "
-
 
 //           >
 //             <div
@@ -1267,12 +1253,8 @@
 
 
 
-
-
-
-
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {Link} from "react-router-dom";
 import {
   ArrowRight,
   Leaf,
@@ -1315,10 +1297,7 @@ function Hero() {
         const data = response.data;
         const products = (
           Array.isArray(data) ? data : data.products || []
-        ).filter(
-          (meal) =>
-            meal.isAvailable !== false && (meal._id || meal.id)
-        );
+        ).filter((meal) => meal.isAvailable !== false && (meal._id || meal.id));
 
         mealsRef.current = products;
         currentIndexRef.current = 0;
@@ -1396,8 +1375,7 @@ function Hero() {
     if (paused || meals.length < 2) return;
 
     const interval = setInterval(() => {
-      const nextIndex =
-        (currentIndexRef.current + 1) % mealsRef.current.length;
+      const nextIndex = (currentIndexRef.current + 1) % mealsRef.current.length;
 
       goToSlide(nextIndex);
     }, SLIDE_INTERVAL);
@@ -1416,7 +1394,7 @@ function Hero() {
   const previousSlide = () => {
     goToSlide(
       (currentIndexRef.current - 1 + mealsRef.current.length) %
-        mealsRef.current.length
+        mealsRef.current.length,
     );
   };
 
@@ -1461,14 +1439,12 @@ xl:gap-12 xl:px-16 xl:py-12
             "
           >
             Good Food
-            <span className="mt-1 block text-[#174D32]">
-              For A Better You
-            </span>
+            <span className="mt-1 block text-[#174D32]">For A Better You</span>
           </h1>
 
           <p className="mt-5 max-w-[480px] text-sm leading-7 text-[#66736B] sm:mt-6 sm:text-base">
-            Fresh, nutritious and delicious meals made with carefully
-            selected ingredients. Because your health deserves the best.
+            Fresh, nutritious and delicious meals made with carefully selected
+            ingredients. Because your health deserves the best.
           </p>
 
           {/* CTA BUTTONS */}
@@ -1570,8 +1546,7 @@ xl:gap-12 xl:px-16 xl:py-12
 
           {/* Image frame */}
           <div
-         
-className="
+            className="
   group relative isolate
   aspect-[4/3] w-full overflow-hidden
   rounded-[22px] bg-[#E5EEDB]
@@ -1581,7 +1556,6 @@ className="
   md:aspect-[4/3] md:rounded-[32px]
   lg:aspect-[5/4] lg:rounded-[38px]
 "
-
           >
             <Link
               to={mealLink}
@@ -1732,10 +1706,7 @@ className="
                 </p>
               </div>
 
-              <ArrowRight
-                size={16}
-                className="ml-1 shrink-0 text-[#174D32]"
-              />
+              <ArrowRight size={16} className="ml-1 shrink-0 text-[#174D32]" />
             </Link>
 
             {/* Slide indicators inside image */}
@@ -1757,9 +1728,7 @@ className="
                     type="button"
                     onClick={() => goToSlide(index)}
                     aria-label={`Show ${meal.name}`}
-                    aria-current={
-                      currentIndex === index ? "true" : undefined
-                    }
+                    aria-current={currentIndex === index ? "true" : undefined}
                     className={`
                       h-1.5 rounded-full
                       transition-all duration-300
@@ -1781,7 +1750,7 @@ className="
   );
 }
 
-function HeroBenefit({ icon, title, description }) {
+function HeroBenefit({icon, title, description}) {
   return (
     <div className="flex min-w-0 flex-col items-center text-center sm:flex-row sm:items-center sm:gap-2.5 sm:text-left lg:gap-3">
       <div
