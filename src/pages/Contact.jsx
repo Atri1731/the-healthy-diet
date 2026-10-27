@@ -303,6 +303,8 @@ import {
   MessageCircle,
 } from "lucide-react";
 import api from "../services/api";
+import Footer from "../components/Footer";
+
 
 const initialForm = {
   name: "",
@@ -626,6 +628,7 @@ export default function Contact() {
           </form>
         </div>
       </section>
+      <Footer />
     </main>
   );
 }

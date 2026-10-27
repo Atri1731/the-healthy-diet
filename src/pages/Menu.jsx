@@ -5,6 +5,7 @@ import api from "../services/api";
 import {useSearchParams} from "react-router-dom";
 import FloatingCartBar from "../components/FloatingCartBar";
 import {useFavorites} from "../context/FavoriteContext";
+import Footer from "../components/Footer";
 
 const categories = [
   "All",
@@ -295,10 +296,20 @@ const menuFoods = filteredFoods;
               Clear Filters
             </button>
           </div>
+
+
         )}
+
+        
       </section>
+      
       <FloatingCartBar />
+      
+<Footer />
+      
     </main>
+
+    
   );
 }
 

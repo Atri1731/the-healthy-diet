@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Leaf, Heart, Sprout, ShieldCheck } from "lucide-react";
+import Footer from "../components/Footer";
 
 const values = [
   {
@@ -202,6 +203,8 @@ export default function AboutUs() {
           </Link>
         </div>
       </section>
+      <Footer />
     </main>
+    
   );
 }
